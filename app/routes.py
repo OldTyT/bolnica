@@ -56,6 +56,7 @@ def stat():
         "ward": {patient.ward},
         "bed": {patient.bed},
         "datetime": {timestamp},
+        "comment": "{patient.comment}",
         "active": {a}
     """ + "}"
         result['patients'].append(json.loads(temp))
