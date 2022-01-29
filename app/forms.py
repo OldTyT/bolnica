@@ -14,3 +14,8 @@ class reg_call(FlaskForm):
 class admin_panel(FlaskForm):
     id = StringField('id', validators=[DataRequired()])
     update = SubmitField('Update')
+
+class get_users(FlaskForm):
+    count = StringField('count')
+    offset = StringField('offset')
+    active = StringField('active')

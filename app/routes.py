@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect
 from app import app
 import json
 from app.models import *
-from app.forms import reg_call, admin_panel
+from app.forms import reg_call, admin_panel, get_users
 from datetime import timezone
 
 
@@ -43,6 +43,14 @@ def adm():
 
 @app.route('/stat', methods=['GET', 'POST'])
 def stat():
+    form = get_users()
+    count = 0
+    offset = 0
+    active = 0
+    if form.validate_on_submit():
+        count = form.count.data or 0
+        offset = form.offset.data or 0
+        active = form.active.data or 0  # Работает криво(не работает)
     patients = db.session.query(Patient).all()
     result = json.loads("""{"patients": []}""")
     for patient in patients:
