@@ -4,6 +4,7 @@ from app import app
 import json
 from app.models import *
 from app.forms import reg_call, admin_panel
+from datetime import timezone
 
 
 @app.route('/')
@@ -39,16 +40,23 @@ def adm():
             db.session.commit()
     return render_template('adm.html', patients=patients, form=form)
 
+
 @app.route('/stat', methods=['GET', 'POST'])
 def stat():
     patients = db.session.query(Patient).all()
     result = json.loads("""{"patients": []}""")
-    #result['patients'].append(json.loads("""{"qwe":"qew"}"""))
     for patient in patients:
-        result['patients'].append(json.loads("""{
-        "id": """ + str(patient.id) + """,
-        "ward": """ + str(patient.ward) + """,
-        "bed": """ + str(patient.bed) + """,
-        "active": """ + str(patient.active) + """
-    }"""))
+        timestamp = str(patient.datetime.replace().timestamp())
+        timestamp = timestamp[0:timestamp.find(".")]
+        a = "0"
+        if patient.active:
+            a = "1"
+        temp = "{" + f"""
+        "id": {patient.id},
+        "ward": {patient.ward},
+        "bed": {patient.bed},
+        "datetime": {timestamp},
+        "active": {a}
+    """ + "}"
+        result['patients'].append(json.loads(temp))
     return result
